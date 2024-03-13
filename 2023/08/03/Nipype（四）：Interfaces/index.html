@@ -9,7 +9,7 @@
     
     <title>
         
-            神经影像（一）：Nipype库学习 |
+            Nipype（四）：Interfaces |
         
         假面骑士鸡翅
     </title>
@@ -152,7 +152,7 @@
     <div class="article-content-container">
 
         <div class="article-title">
-            <span class="title-hover-animation">神经影像（一）：Nipype库学习</span>
+            <span class="title-hover-animation">Nipype（四）：Interfaces</span>
         </div>
 
         
@@ -171,8 +171,8 @@
                         <div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fas fa-edit"></i>&nbsp;
-        <span class="pc">2023-07-21 15:41:33</span>
-        <span class="mobile">2023-07-21 15:41</span>
+        <span class="pc">2023-08-03 15:45:29</span>
+        <span class="mobile">2023-08-03 15:45</span>
     </span>
     
         <span class="article-categories article-meta-item">
@@ -202,12 +202,12 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fas fa-file-word"></i>&nbsp;<span>881 字</span>
+            <i class="fas fa-file-word"></i>&nbsp;<span>924 字</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fas fa-clock"></i>&nbsp;<span>3 分钟</span>
+            <i class="fas fa-clock"></i>&nbsp;<span>4 分钟</span>
         </span>
     
     
@@ -223,115 +223,106 @@
         
 
         <div class="article-content markdown-body">
-            <h1 id="Nipype简介"><a href="#Nipype简介" class="headerlink" title="Nipype简介"></a>Nipype简介</h1><p>Nipype是一个开源神经影像处理软件包，使用python编写。整合了传统神经影像处理软件包的接口（SPM,FSL,FreeSurfer,AFNI以及其他），可以使研究人员通过不同的软件处理图像，将其整合在一起。</p>
-<p>比如你想使用SPM做头动矫正，FreeSurfer做配准，ANTS用来标准化，然后FSL做平滑。使用传统流程会非常麻烦，需要你对各种软件的掌握。使用Nipype可以轻松完成。</p>
-<h2 id="什么是Nipype"><a href="#什么是Nipype" class="headerlink" title="什么是Nipype"></a>什么是Nipype</h2><p>Nipype由多个组件构成，主要的组件有Interfaces,the WorkflowEngine 和Execution Plugins:</p>
-<p><br/><br></p>
-<div>            <!--块级封装-->
-    <center>    <!--将图片和文字居中-->
-    <img src="https://cdn.staticaly.com/gh/maxiro-samurai/image-bed@main/image/1689908081549.23zqnq9rfyxs.webp"
-        alt="寄"
-        style="zoom:这里写图片的缩放百分比"/>
-    <br>        <!--换行-->
-    Nipype构成    <!--标题-->
-    </center>
-</div>
-<br><br> 
-
-<ul>
-<li><p>Interface: 相关软件的接口，可以是一个函数</p>
-</li>
-<li><p>Node&#x2F;MapNode: 把一个接口打包成节点，在Workflow中使用。</p>
-</li>
-<li><p>Workflow: 一个表示工作流程的图，一个Workflow下面有很多节点。</p>
-</li>
-<li><p>Plugin: 用来展示Workflow是如何工作的</p>
-</li>
-</ul>
-<h2 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h2><p>Docker是一个开源项目，用来在容器中自动部署应用。（Docker的使用和学习令写，在这只简单介绍）这个容器可以打包运行Nipype所需的软件和完整的文件系统：代码，系统工具，软件库，比如 Python, FSL, AFNI, SPM, FreeSurfer, ANTs。这保证了可移植性，在不同环境中都可以运行。</p>
-<p>Nipype官方教程所使用的  <a class="link"   target="_blank" rel="noopener" href="https://hub.docker.com/r/miykael/nipype_tutorial/" >miykael&#x2F;nipype_tutorial<i class="fas fa-external-link-alt"></i></a>镜像，建立了一个Linux环境和一系列所需软件包。同样的我们可以创建自己的docker镜像处理自己的数据。（之后再学用<a class="link"   target="_blank" rel="noopener" href="https://github.com/kaczmarj/neurodocker" > Neurodocker<i class="fas fa-external-link-alt"></i></a>创建）</p>
-<h3 id="Docker-for-windows"><a href="#Docker-for-windows" class="headerlink" title="Docker for windows"></a>Docker for windows</h3><p>我是用的是Windows 10去docker官网下载 <a class="link"   target="_blank" rel="noopener" href="https://docs.docker.com/toolbox/toolbox_install_windows/" >Docker for windows<i class="fas fa-external-link-alt"></i></a></p>
-<p>下载完成后使用终端测试是否安装正确：</p>
-<pre><code>docker --version
+            <h1 id="Interfaces"><a href="#Interfaces" class="headerlink" title="Interfaces"></a>Interfaces</h1><p>在之前已经学习过Interfaces的基本概念和操作，这里简单介绍一下。Interfaces就是其他软件包的python函数接口，想要使用其他软件的（例如FSL,SPM或者FreeSurfer）函数，就需要此函数的python接口和安装相应的软件包。</p>
+<h2 id="BET函数原始使用方法"><a href="#BET函数原始使用方法" class="headerlink" title="BET函数原始使用方法"></a>BET函数原始使用方法</h2><p>先看一下我们需要去头骨的原始图像。</p>
+<pre><code>from nilearn.plotting import plot_anat
+%matplotlib inline
+plot_anat(&#39;/data/ds000114/sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz&#39;, title=&#39;original&#39;,
+      display_mode=&#39;ortho&#39;, dim=-1, draw_cross=False, annotate=False);
 </code></pre>
-<div>            <!--块级封装-->
-
-<p><img src="https://cdn.staticaly.com/gh/maxiro-samurai/image-bed@main/image/image.12aigggbs7yo.webp"
-    alt="寄"
-    style="zoom:这里写图片的缩放百分比"/><br><br>        <!--换行--><br>    <!--标题--></p>
-</div>
-
-
-<pre><code>docker run hello-world
+<p><img src="https://cdn.staticaly.com/gh/maxiro-samurai/image-bed@main/image/image.4xdlr3xmwg00.webp" alt="image"></p>
+<p>使用BET函数命令行形式（即在FSL中原始使用方法）</p>
+<pre><code>bet &lt;input&gt; &lt;output&gt;
 </code></pre>
-<div>            <!--块级封装-->
-    <center>    <!--将图片和文字居中-->
-    <img src="https://cdn.staticaly.com/gh/maxiro-samurai/image-bed@main/image/image.50rb0914t0w0.webp"
-        alt="寄"
-        style="zoom:这里写图片的缩放百分比"/>
-    <br>        <!--换行-->
-        <!--标题-->
-    </center>
-</div>
+<p>在ipython中则需要在前面加<code>%%bash</code></p>
+<pre><code>%%bash
 
+FILENAME=/data/ds000114/sub-01/ses-test/anat/sub-01_ses-test_T1w
 
-<p>这里提醒一下，Docker默认下载到C盘无法修改，Docker拉取的镜像也是在C盘，所以需要C盘空间很大，我试了修改镜像的位置，行不通，所以只能扩充C盘的大小了。</p>
-<h3 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h3><p>确认Docker安装没有问题后，就可以开始拉取镜像了。</p>
-<pre><code>docker pull miykael/nipype_tutorial:latest
+bet $&#123;FILENAME&#125;.nii.gz /output/sub-01_ses-test_T1w_bet.nii.gz
 </code></pre>
-<p>由于是从国外的镜像网站拉取镜像，速度很慢。解决方法是使用国内镜像加速。</p>
-<p>找到C:\Program Files\Docker\Docker\resources文件夹下的windows-daemon-options.json文件</p>
-<pre><code>&quot;registry-mirrors&quot;: [&quot;https://m3e4jmm0.mirror.aliyuncs.com&quot;],
-</code></pre>
-<p>把镜像地址改为阿里云镜像。</p>
-<h3 id="运行镜像"><a href="#运行镜像" class="headerlink" title="运行镜像"></a>运行镜像</h3><p>简单运行miykael&#x2F;nipype_tutorial，使用命令：</p>
-<pre><code>docker run -it --rm -p 8888:8888 miykael/nipype_tutorial jupyter notebook
-</code></pre>
-<p>如果想要使用本地的dataset，使用命令：</p>
-<pre><code>docker run -it --rm -v /path/to/nipype_tutorial/:/home/neuro/nipype_tutorial -v /path/to/data/:/data -v /path/to/output/:/output -p 8888:8888 miykael/nipype_tutorial jupyter notebook
-</code></pre>
-<ul>
-<li><p>-it 表示打开一个可以交互的容器</p>
-</li>
-<li><p>–rm 在关闭Docker后容器自动移除</p>
-</li>
-<li><p>-p 表示使用哪个端口</p>
-</li>
-<li><p>-v 表示把本地的文件加载到容器中去 &#x2F;path&#x2F;to&#x2F;nipype_tutorial&#x2F; 表示本地nipype_tutorial路径，：表示加载到容器中的路径。</p>
-</li>
-<li><p>miykael&#x2F;nipype_tutorial 表示运行哪个镜像</p>
-</li>
-<li><p>jupyter notebook 在容器中打开jupyter</p>
-</li>
-</ul>
-<h3 id="关闭容器"><a href="#关闭容器" class="headerlink" title="关闭容器"></a>关闭容器</h3><p>在终端使用ctrl-c可以关闭容器</p>
-<h3 id="列出所有image"><a href="#列出所有image" class="headerlink" title="列出所有image"></a>列出所有image</h3><pre><code>docker images
-</code></pre>
-<h3 id="删除镜像"><a href="#删除镜像" class="headerlink" title="删除镜像"></a>删除镜像</h3><pre><code>docker rmi -f 7d9495d03763
-</code></pre>
-<p>后面的数字为镜像ID</p>
-<h3 id="提取和加载镜像"><a href="#提取和加载镜像" class="headerlink" title="提取和加载镜像"></a>提取和加载镜像</h3><p>如果想使用U盘保存镜像，使用命令：</p>
-<pre><code># Export docker image miykael/nipype_tutorial
-docker save -o nipype_tutorial.tar miykael/nipype_tutorial
+<p>使用查看帮助信息</p>
+<pre><code>!bet -h
 
-# Import docker image on another PC
-docker load --input nipype_tutorial.tar
+Usage:    bet &lt;input&gt; &lt;output&gt; [options]
+
+Main bet2 options:
+-o          generate brain surface outline overlaid onto original image
+-m          generate binary brain mask
+-s          generate approximate skull image
+-n          don&#39;t generate segmented brain image output
+-f &lt;f&gt;      fractional intensity threshold (0-&gt;1); default=0.5; smaller values give larger brain outline estimates
+-g &lt;g&gt;      vertical gradient in fractional intensity threshold (-1-&gt;1); default=0; positive values give larger brain outline at bottom, smaller at top
+-r &lt;r&gt;      head radius (mm not voxels); initial surface sphere is set to half of this
+-c &lt;x y z&gt;  centre-of-gravity (voxels not mm) of initial mesh surface.
+-t          apply thresholding to segmented brain image and mask
+-e          generates brain surface as mesh in .vtk format
+
+Variations on default bet2 functionality (mutually exclusive options):
+(default)   just run bet2
+-R          robust brain centre estimation (iterates BET several times)
+-S          eye &amp; optic nerve cleanup (can be useful in SIENA)
+-B          bias field &amp; neck cleanup (can be useful in SIENA)
+-Z          improve BET if FOV is very small in Z (by temporarily padding end slices)
+-F          apply to 4D FMRI data (uses -f 0.3 and dilates brain mask slightly)
+-A          run bet2 and then betsurf to get additional skull and scalp surfaces (includes registrations)
+-A2 &lt;T2&gt;    as with -A, when also feeding in non-brain-extracted T2 (includes registrations)
+
+Miscellaneous options:
+-v          verbose (switch on diagnostic messages)
+-h          display this help, then exits
+-d          debug (don&#39;t delete temporary intermediate images)
 </code></pre>
-<h2 id="数据保存格式"><a href="#数据保存格式" class="headerlink" title="数据保存格式"></a>数据保存格式</h2><p>这个教程的数据保存结构是根据<a class="link"   target="_blank" rel="noopener" href="http://bids.neuroimaging.io/" > Brain Imaging Data Structure (BIDS)<i class="fas fa-external-link-alt"></i></a>.</p>
-<p>这个格式结构清晰，并且易于共享。</p>
-<div>            <!--块级封装-->
-    <center>    <!--将图片和文字居中-->
-    <img src="https://cdn.staticaly.com/gh/maxiro-samurai/image-bed@main/image/image.hbe4ctu09jk.webp"
-        alt="寄"
-        style="zoom:这里写图片的缩放百分比"/>
-    <br>        <!--换行-->
-        <!--标题-->
-    </center>
-</div>
-<br> 
+<p>使用命令行生成二进制掩膜文件。</p>
+<pre><code>%%bash
 
+FILENAME=/data/ds000114/sub-01/ses-test/anat/sub-01_ses-test_T1w
 
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>nipype官方教程 <a class="link"   target="_blank" rel="noopener" href="https://miykael.github.io/nipype_tutorial/" >Nipype tutorial<i class="fas fa-external-link-alt"></i></a></p>
+bet $&#123;FILENAME&#125;.nii.gz /output/sub-01_ses-test_T1w_bet.nii.gz -m
+</code></pre>
+<p>由此我们可知道python接口的函数实际上也是在命令行中输入需要的操作，不过使用的是python脚本形式。</p>
+<h2 id="BET函数接口使用"><a href="#BET函数接口使用" class="headerlink" title="BET函数接口使用"></a>BET函数接口使用</h2><p>在之前有，这里简要介绍。</p>
+<pre><code># import BET函数
+from nipype.interfaces.fsl import BET
+skullstrip = BET() # 对象实例化
+skullstrip.inputs.in_file = &quot;/data/ds000114/sub-01/ses-test/anat/ sub-01_ses-test_T1w.nii.gz&quot; # 输入文件路径
+skullstrip.inputs.out_file = &quot;/output/T1w_nipype_bet.nii.gz&quot; # 输出文件路径
+res = skullstrip.run() # 运行
+</code></pre>
+<p><img src="https://cdn.staticaly.com/gh/maxiro-samurai/image-bed@main/image/image.vyddlx4ra8g.webp" alt="image"></p>
+<p>我们来看一下输出的命令行</p>
+<pre><code>print(skullstrip.cmdline)
+
+bet /data/ds000114/sub-01/ses-test/anat/sub-01_ses-test_T1w.nii.gz /output/T1w_nipype_bet.nii.gz
+</code></pre>
+<p>与我们正常使用时的一样。</p>
+<h2 id="Interface-errors"><a href="#Interface-errors" class="headerlink" title="Interface errors"></a>Interface errors</h2><p>使用<code>run</code>方法运行接口时，对于FSL、Freesurfer和其他程序，会使系统输入上述命令行命令。对于MATLAB的程序如SPM，它会生成一个.m文件，然后在matlab环境下运行这个.m文件。</p>
+<p>如果我们不给函数接口一个必要的输入参数它就会报错</p>
+<pre><code>skullstrip2 = BET()
+try:
+    skullstrip2.run()
+except(ValueError) as err:
+    print(&quot;ValueError:&quot;, err)
+else:
+    raise
+
+ValueError: BET requires a value for input &#39;in_file&#39;. For a list of required inputs, see BET.help()
+</code></pre>
+<p>BET函数没有输入文件的路径</p>
+<p>又或者输入类型搞错，比如BET（）函数想要生成掩膜文件，你却把淹没文件的名字输入上去了 XD。</p>
+<pre><code>try:
+skullstrip.inputs.mask = &quot;mask_file.nii&quot;
+except(Exception) as err:
+    if &quot;TraitError&quot; in str(err.__class__):
+        print(&quot;TraitError:&quot;, err)
+    else:
+        raise
+else:
+    raise
+TraitError: The &#39;mask&#39; trait of a BETInputSpec instance must be a boolean, but a value of &#39;mask_file.nii&#39; &lt;class &#39;str&#39;&gt; was specified.
+</code></pre>
+<p>在报错的时候根据报错信息修改程序</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>nipype_tutorial <a class="link"   target="_blank" rel="noopener" href="https://miykael.github.io/nipype_tutorial/notebooks/basic_interfaces.html" >Interface<i class="fas fa-external-link-alt"></i></a></p>
 
         </div>
 
@@ -339,11 +330,11 @@ docker load --input nipype_tutorial.tar
             <div class="post-copyright-info">
                 <div class="article-copyright-info-container">
     <ul>
-        <li>本文标题：神经影像（一）：Nipype库学习</li>
+        <li>本文标题：Nipype（四）：Interfaces</li>
         <li>本文作者：假面骑士鸡翅</li>
-        <li>创建时间：2023-07-21 15:41:33</li>
+        <li>创建时间：2023-08-03 15:45:29</li>
         <li>
-            本文链接：https://maxiro-samurai.github.io/2023/07/21/Nipype（一）：Nipype库学习/
+            本文链接：https://maxiro-samurai.github.io/2023/08/03/Nipype（四）：Interfaces/
         </li>
         <li>
             版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -370,13 +361,13 @@ docker load --input nipype_tutorial.tar
                     <div class="article-prev">
                         <a class="prev"
                            rel="prev"
-                           href="/2023/07/24/Nipype%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9Ashowcase/"
+                           href="/2024/03/13/%E8%BF%9C%E7%A8%8B%E4%BF%9D%E5%AD%98hexo%E5%8D%9A%E5%AE%A2%E4%BB%93%E5%BA%93/"
                         >
                             <span class="left arrow-icon flex-center">
                               <i class="fas fa-chevron-left"></i>
                             </span>
                             <span class="title flex-center">
-                                <span class="post-nav-title-item">Nipype（二）：showcase</span>
+                                <span class="post-nav-title-item">远程保存hexo博客仓库</span>
                                 <span class="post-nav-item">上一篇</span>
                             </span>
                         </a>
@@ -386,10 +377,10 @@ docker load --input nipype_tutorial.tar
                     <div class="article-next">
                         <a class="next"
                            rel="next"
-                           href="/2023/07/05/hello-world/"
+                           href="/2023/07/24/Nipype%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9AQuickstart/"
                         >
                             <span class="title flex-center">
-                                <span class="post-nav-title-item">Hello World</span>
+                                <span class="post-nav-title-item">Nipype（三）:Quickstart</span>
                                 <span class="post-nav-item">下一篇</span>
                             </span>
                             <span class="right arrow-icon flex-center">
@@ -597,7 +588,7 @@ docker load --input nipype_tutorial.tar
         <aside class="page-aside">
             <div class="post-toc-wrap">
     <div class="post-toc">
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Nipype%E7%AE%80%E4%BB%8B"><span class="nav-text">Nipype简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFNipype"><span class="nav-text">什么是Nipype</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker"><span class="nav-text">Docker</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-for-windows"><span class="nav-text">Docker for windows</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%89%E5%8F%96%E9%95%9C%E5%83%8F"><span class="nav-text">拉取镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E9%95%9C%E5%83%8F"><span class="nav-text">运行镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%97%AD%E5%AE%B9%E5%99%A8"><span class="nav-text">关闭容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%97%E5%87%BA%E6%89%80%E6%9C%89image"><span class="nav-text">列出所有image</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E9%95%9C%E5%83%8F"><span class="nav-text">删除镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E5%8F%96%E5%92%8C%E5%8A%A0%E8%BD%BD%E9%95%9C%E5%83%8F"><span class="nav-text">提取和加载镜像</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E4%BF%9D%E5%AD%98%E6%A0%BC%E5%BC%8F"><span class="nav-text">数据保存格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-text">参考</span></a></li></ol></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Interfaces"><span class="nav-text">Interfaces</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#BET%E5%87%BD%E6%95%B0%E5%8E%9F%E5%A7%8B%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="nav-text">BET函数原始使用方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BET%E5%87%BD%E6%95%B0%E6%8E%A5%E5%8F%A3%E4%BD%BF%E7%94%A8"><span class="nav-text">BET函数接口使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Interface-errors"><span class="nav-text">Interface errors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-text">参考</span></a></li></ol></li></ol>
     </div>
 </div>
         </aside>

@@ -9,7 +9,7 @@
     
     <title>
         
-            神经影像（一）：Nipype库学习 |
+            远程保存hexo博客仓库 |
         
         假面骑士鸡翅
     </title>
@@ -152,7 +152,7 @@
     <div class="article-content-container">
 
         <div class="article-title">
-            <span class="title-hover-animation">神经影像（一）：Nipype库学习</span>
+            <span class="title-hover-animation">远程保存hexo博客仓库</span>
         </div>
 
         
@@ -171,20 +171,9 @@
                         <div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fas fa-edit"></i>&nbsp;
-        <span class="pc">2023-07-21 15:41:33</span>
-        <span class="mobile">2023-07-21 15:41</span>
+        <span class="pc">2024-03-13 22:08:41</span>
+        <span class="mobile">2024-03-13 22:08</span>
     </span>
-    
-        <span class="article-categories article-meta-item">
-            <i class="fas fa-folder"></i>&nbsp;
-            <ul>
-                
-                    <li>
-                        <a href="/categories/python/">python</a>&nbsp;
-                    </li>
-                
-            </ul>
-        </span>
     
     
         <span class="article-tags article-meta-item">
@@ -192,7 +181,7 @@
             <ul>
                 
                     <li>
-                        <a href="/tags/%E7%A5%9E%E7%BB%8F%E5%BD%B1%E5%83%8F/">神经影像</a>&nbsp;
+                        <a href="/tags/%E6%9D%82%E8%AE%B0/">杂记</a>&nbsp;
                     </li>
                 
             </ul>
@@ -202,12 +191,12 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fas fa-file-word"></i>&nbsp;<span>881 字</span>
+            <i class="fas fa-file-word"></i>&nbsp;<span>578 字</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fas fa-clock"></i>&nbsp;<span>3 分钟</span>
+            <i class="fas fa-clock"></i>&nbsp;<span>2 分钟</span>
         </span>
     
     
@@ -223,115 +212,59 @@
         
 
         <div class="article-content markdown-body">
-            <h1 id="Nipype简介"><a href="#Nipype简介" class="headerlink" title="Nipype简介"></a>Nipype简介</h1><p>Nipype是一个开源神经影像处理软件包，使用python编写。整合了传统神经影像处理软件包的接口（SPM,FSL,FreeSurfer,AFNI以及其他），可以使研究人员通过不同的软件处理图像，将其整合在一起。</p>
-<p>比如你想使用SPM做头动矫正，FreeSurfer做配准，ANTS用来标准化，然后FSL做平滑。使用传统流程会非常麻烦，需要你对各种软件的掌握。使用Nipype可以轻松完成。</p>
-<h2 id="什么是Nipype"><a href="#什么是Nipype" class="headerlink" title="什么是Nipype"></a>什么是Nipype</h2><p>Nipype由多个组件构成，主要的组件有Interfaces,the WorkflowEngine 和Execution Plugins:</p>
-<p><br/><br></p>
-<div>            <!--块级封装-->
-    <center>    <!--将图片和文字居中-->
-    <img src="https://cdn.staticaly.com/gh/maxiro-samurai/image-bed@main/image/1689908081549.23zqnq9rfyxs.webp"
-        alt="寄"
-        style="zoom:这里写图片的缩放百分比"/>
-    <br>        <!--换行-->
-    Nipype构成    <!--标题-->
-    </center>
-</div>
-<br><br> 
-
+            <h1 id="问题来源"><a href="#问题来源" class="headerlink" title="问题来源"></a>问题来源</h1><p>博主之前用的是笔记本，最早的博客都存在笔记本上，读研之后电脑设备增多，工位一个，宿舍一个。如果用之前的方法，每个电脑上都保存一个博客数据，更新起来很不方便。于是我想到这个问题正好可以用Github解决（Github使用不熟练），所以在网上找了一个方法，本篇博客为记录并且复刻方法。</p>
+<p>参考: <a class="link"   target="_blank" rel="noopener" href="https://blog.csdn.net/heimu24/article/details/81210640" >hexo个人博客：换了电脑怎么办<i class="fas fa-external-link-alt"></i></a></p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>首先需要知道，hexo生成的静态文件会放在public&#x2F;文件夹中，部署就是把public文件夹中的内容上传到git仓库中。</p>
 <ul>
-<li><p>Interface: 相关软件的接口，可以是一个函数</p>
+<li><p>方案一：在github仓库上新建一个仓库，然后把blog文件夹上传进行备份。</p>
 </li>
-<li><p>Node&#x2F;MapNode: 把一个接口打包成节点，在Workflow中使用。</p>
-</li>
-<li><p>Workflow: 一个表示工作流程的图，一个Workflow下面有很多节点。</p>
-</li>
-<li><p>Plugin: 用来展示Workflow是如何工作的</p>
+<li><p>方案二: 在博客仓库创建一个新的分支，使用分支来管理。</p>
 </li>
 </ul>
-<h2 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h2><p>Docker是一个开源项目，用来在容器中自动部署应用。（Docker的使用和学习令写，在这只简单介绍）这个容器可以打包运行Nipype所需的软件和完整的文件系统：代码，系统工具，软件库，比如 Python, FSL, AFNI, SPM, FreeSurfer, ANTs。这保证了可移植性，在不同环境中都可以运行。</p>
-<p>Nipype官方教程所使用的  <a class="link"   target="_blank" rel="noopener" href="https://hub.docker.com/r/miykael/nipype_tutorial/" >miykael&#x2F;nipype_tutorial<i class="fas fa-external-link-alt"></i></a>镜像，建立了一个Linux环境和一系列所需软件包。同样的我们可以创建自己的docker镜像处理自己的数据。（之后再学用<a class="link"   target="_blank" rel="noopener" href="https://github.com/kaczmarj/neurodocker" > Neurodocker<i class="fas fa-external-link-alt"></i></a>创建）</p>
-<h3 id="Docker-for-windows"><a href="#Docker-for-windows" class="headerlink" title="Docker for windows"></a>Docker for windows</h3><p>我是用的是Windows 10去docker官网下载 <a class="link"   target="_blank" rel="noopener" href="https://docs.docker.com/toolbox/toolbox_install_windows/" >Docker for windows<i class="fas fa-external-link-alt"></i></a></p>
-<p>下载完成后使用终端测试是否安装正确：</p>
-<pre><code>docker --version
+<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><p>本文采用方案二</p>
+<h3 id="1-拷贝远程仓库"><a href="#1-拷贝远程仓库" class="headerlink" title="1.拷贝远程仓库"></a>1.拷贝远程仓库</h3><p>进入D盘，右键点击Git bash here</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone git@github.com:maxiro-samurai/maxiro-samurai.github.io.git</span><br></pre></td></tr></table></figure>
+<p>把项目文件夹拷贝到本地</p>
+<h3 id="2-删除文件夹内容"><a href="#2-删除文件夹内容" class="headerlink" title="2.删除文件夹内容"></a>2.删除文件夹内容</h3><p>进入<code>maxiro-samurai.github.io.git</code>项目文件夹中，删除其中的内容，把blog文件夹（即备份的blog）下全部复制到其中</p>
+<h3 id="3-gitignore文件"><a href="#3-gitignore文件" class="headerlink" title="3. .gitignore文件"></a>3. .gitignore文件</h3><p>打开.gitignore文件，这个文件的作用是指定哪些文件上传的时候可以忽略，因为blog&#x2F;的文件并不全部都需要</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">.DS_Store</span><br><span class="line">Thumbs.db</span><br><span class="line">db.json</span><br><span class="line">*.log</span><br><span class="line">node_modules/</span><br><span class="line">public/</span><br><span class="line">.deploy*/</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>意思就是上传的时候忽略以上内容</p>
+<h3 id="4-创建一个hexo（任意名字）的分支并切换到这个分支"><a href="#4-创建一个hexo（任意名字）的分支并切换到这个分支" class="headerlink" title="4.创建一个hexo（任意名字）的分支并切换到这个分支"></a>4.创建一个hexo（任意名字）的分支并切换到这个分支</h3><pre><code>git checkout -b hexo 
 </code></pre>
-<div>            <!--块级封装-->
-
-<p><img src="https://cdn.staticaly.com/gh/maxiro-samurai/image-bed@main/image/image.12aigggbs7yo.webp"
-    alt="寄"
-    style="zoom:这里写图片的缩放百分比"/><br><br>        <!--换行--><br>    <!--标题--></p>
-</div>
-
-
-<pre><code>docker run hello-world
+<p>把所有文件添加到暂存区</p>
+<pre><code>git add --all
 </code></pre>
-<div>            <!--块级封装-->
-    <center>    <!--将图片和文字居中-->
-    <img src="https://cdn.staticaly.com/gh/maxiro-samurai/image-bed@main/image/image.50rb0914t0w0.webp"
-        alt="寄"
-        style="zoom:这里写图片的缩放百分比"/>
-    <br>        <!--换行-->
-        <!--标题-->
-    </center>
-</div>
-
-
-<p>这里提醒一下，Docker默认下载到C盘无法修改，Docker拉取的镜像也是在C盘，所以需要C盘空间很大，我试了修改镜像的位置，行不通，所以只能扩充C盘的大小了。</p>
-<h3 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h3><p>确认Docker安装没有问题后，就可以开始拉取镜像了。</p>
-<pre><code>docker pull miykael/nipype_tutorial:latest
+<p>提交到本地版本库</p>
+<pre><code>git commit -m &quot;&quot;
 </code></pre>
-<p>由于是从国外的镜像网站拉取镜像，速度很慢。解决方法是使用国内镜像加速。</p>
-<p>找到C:\Program Files\Docker\Docker\resources文件夹下的windows-daemon-options.json文件</p>
-<pre><code>&quot;registry-mirrors&quot;: [&quot;https://m3e4jmm0.mirror.aliyuncs.com&quot;],
+<p>推送hexo分支的文件到github仓库</p>
+<pre><code>git push --set-upstream origin hexo
 </code></pre>
-<p>把镜像地址改为阿里云镜像。</p>
-<h3 id="运行镜像"><a href="#运行镜像" class="headerlink" title="运行镜像"></a>运行镜像</h3><p>简单运行miykael&#x2F;nipype_tutorial，使用命令：</p>
-<pre><code>docker run -it --rm -p 8888:8888 miykael/nipype_tutorial jupyter notebook
-</code></pre>
-<p>如果想要使用本地的dataset，使用命令：</p>
-<pre><code>docker run -it --rm -v /path/to/nipype_tutorial/:/home/neuro/nipype_tutorial -v /path/to/data/:/data -v /path/to/output/:/output -p 8888:8888 miykael/nipype_tutorial jupyter notebook
-</code></pre>
-<ul>
-<li><p>-it 表示打开一个可以交互的容器</p>
+<h3 id="5-结束"><a href="#5-结束" class="headerlink" title="5. 结束"></a>5. 结束</h3><p><img src="https://github.com/maxiro-samurai/picx-images-hosting/raw/master/image.1zi0g7771p.png" alt="image"></p>
+<p>效果</p>
+<p><img src="https://github.com/maxiro-samurai/picx-images-hosting/raw/master/image.7p3crs3ype.webp" alt="image"></p>
+<p>这个就是最后需要备份的文件夹</p>
+<h3 id="6-更新博客"><a href="#6-更新博客" class="headerlink" title="6.更新博客"></a>6.更新博客</h3><ul>
+<li><p>生成草稿</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new draft 远程保存hexo博客仓库</span><br></pre></td></tr></table></figure>
+<p><img src="https://github.com/maxiro-samurai/picx-images-hosting/raw/master/image.67x7q1a3my.webp" alt="image"></p>
 </li>
-<li><p>–rm 在关闭Docker后容器自动移除</p>
+<li><p>发布博客</p>
+<pre><code>  hexo publish 远程保存hexo博客仓库
+  hexo g 
+  hexo d
+</code></pre>
 </li>
-<li><p>-p 表示使用哪个端口</p>
-</li>
-<li><p>-v 表示把本地的文件加载到容器中去 &#x2F;path&#x2F;to&#x2F;nipype_tutorial&#x2F; 表示本地nipype_tutorial路径，：表示加载到容器中的路径。</p>
-</li>
-<li><p>miykael&#x2F;nipype_tutorial 表示运行哪个镜像</p>
-</li>
-<li><p>jupyter notebook 在容器中打开jupyter</p>
+<li><p>更新备份</p>
+<pre><code>  git add.
+
+  git commit -m&quot;注释&quot;
+
+  git push origin hexo
+</code></pre>
 </li>
 </ul>
-<h3 id="关闭容器"><a href="#关闭容器" class="headerlink" title="关闭容器"></a>关闭容器</h3><p>在终端使用ctrl-c可以关闭容器</p>
-<h3 id="列出所有image"><a href="#列出所有image" class="headerlink" title="列出所有image"></a>列出所有image</h3><pre><code>docker images
-</code></pre>
-<h3 id="删除镜像"><a href="#删除镜像" class="headerlink" title="删除镜像"></a>删除镜像</h3><pre><code>docker rmi -f 7d9495d03763
-</code></pre>
-<p>后面的数字为镜像ID</p>
-<h3 id="提取和加载镜像"><a href="#提取和加载镜像" class="headerlink" title="提取和加载镜像"></a>提取和加载镜像</h3><p>如果想使用U盘保存镜像，使用命令：</p>
-<pre><code># Export docker image miykael/nipype_tutorial
-docker save -o nipype_tutorial.tar miykael/nipype_tutorial
-
-# Import docker image on another PC
-docker load --input nipype_tutorial.tar
-</code></pre>
-<h2 id="数据保存格式"><a href="#数据保存格式" class="headerlink" title="数据保存格式"></a>数据保存格式</h2><p>这个教程的数据保存结构是根据<a class="link"   target="_blank" rel="noopener" href="http://bids.neuroimaging.io/" > Brain Imaging Data Structure (BIDS)<i class="fas fa-external-link-alt"></i></a>.</p>
-<p>这个格式结构清晰，并且易于共享。</p>
-<div>            <!--块级封装-->
-    <center>    <!--将图片和文字居中-->
-    <img src="https://cdn.staticaly.com/gh/maxiro-samurai/image-bed@main/image/image.hbe4ctu09jk.webp"
-        alt="寄"
-        style="zoom:这里写图片的缩放百分比"/>
-    <br>        <!--换行-->
-        <!--标题-->
-    </center>
-</div>
-<br> 
-
-
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>nipype官方教程 <a class="link"   target="_blank" rel="noopener" href="https://miykael.github.io/nipype_tutorial/" >Nipype tutorial<i class="fas fa-external-link-alt"></i></a></p>
+<p>至此大功告成，在新电脑上只需要从远程仓库clone到本地，然后按照上述步骤进行更新博客即可</p>
 
         </div>
 
@@ -339,11 +272,11 @@ docker load --input nipype_tutorial.tar
             <div class="post-copyright-info">
                 <div class="article-copyright-info-container">
     <ul>
-        <li>本文标题：神经影像（一）：Nipype库学习</li>
+        <li>本文标题：远程保存hexo博客仓库</li>
         <li>本文作者：假面骑士鸡翅</li>
-        <li>创建时间：2023-07-21 15:41:33</li>
+        <li>创建时间：2024-03-13 22:08:41</li>
         <li>
-            本文链接：https://maxiro-samurai.github.io/2023/07/21/Nipype（一）：Nipype库学习/
+            本文链接：https://maxiro-samurai.github.io/2024/03/13/远程保存hexo博客仓库/
         </li>
         <li>
             版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -358,7 +291,7 @@ docker load --input nipype_tutorial.tar
             <ul class="post-tags-box">
                 
                     <li class="tag-item">
-                        <a href="/tags/%E7%A5%9E%E7%BB%8F%E5%BD%B1%E5%83%8F/">#神经影像</a>&nbsp;
+                        <a href="/tags/%E6%9D%82%E8%AE%B0/">#杂记</a>&nbsp;
                     </li>
                 
             </ul>
@@ -367,29 +300,14 @@ docker load --input nipype_tutorial.tar
         
             <div class="article-nav">
                 
-                    <div class="article-prev">
-                        <a class="prev"
-                           rel="prev"
-                           href="/2023/07/24/Nipype%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9Ashowcase/"
-                        >
-                            <span class="left arrow-icon flex-center">
-                              <i class="fas fa-chevron-left"></i>
-                            </span>
-                            <span class="title flex-center">
-                                <span class="post-nav-title-item">Nipype（二）：showcase</span>
-                                <span class="post-nav-item">上一篇</span>
-                            </span>
-                        </a>
-                    </div>
-                
                 
                     <div class="article-next">
                         <a class="next"
                            rel="next"
-                           href="/2023/07/05/hello-world/"
+                           href="/2023/08/03/Nipype%EF%BC%88%E5%9B%9B%EF%BC%89%EF%BC%9AInterfaces/"
                         >
                             <span class="title flex-center">
-                                <span class="post-nav-title-item">Hello World</span>
+                                <span class="post-nav-title-item">Nipype（四）：Interfaces</span>
                                 <span class="post-nav-item">下一篇</span>
                             </span>
                             <span class="right arrow-icon flex-center">
@@ -597,7 +515,7 @@ docker load --input nipype_tutorial.tar
         <aside class="page-aside">
             <div class="post-toc-wrap">
     <div class="post-toc">
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Nipype%E7%AE%80%E4%BB%8B"><span class="nav-text">Nipype简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFNipype"><span class="nav-text">什么是Nipype</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker"><span class="nav-text">Docker</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker-for-windows"><span class="nav-text">Docker for windows</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%89%E5%8F%96%E9%95%9C%E5%83%8F"><span class="nav-text">拉取镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E9%95%9C%E5%83%8F"><span class="nav-text">运行镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%97%AD%E5%AE%B9%E5%99%A8"><span class="nav-text">关闭容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%97%E5%87%BA%E6%89%80%E6%9C%89image"><span class="nav-text">列出所有image</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E9%95%9C%E5%83%8F"><span class="nav-text">删除镜像</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E5%8F%96%E5%92%8C%E5%8A%A0%E8%BD%BD%E9%95%9C%E5%83%8F"><span class="nav-text">提取和加载镜像</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E4%BF%9D%E5%AD%98%E6%A0%BC%E5%BC%8F"><span class="nav-text">数据保存格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-text">参考</span></a></li></ol></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%9D%A5%E6%BA%90"><span class="nav-text">问题来源</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-text">解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4"><span class="nav-text">步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%8B%B7%E8%B4%9D%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="nav-text">1.拷贝远程仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6%E5%A4%B9%E5%86%85%E5%AE%B9"><span class="nav-text">2.删除文件夹内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-gitignore%E6%96%87%E4%BB%B6"><span class="nav-text">3. .gitignore文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAhexo%EF%BC%88%E4%BB%BB%E6%84%8F%E5%90%8D%E5%AD%97%EF%BC%89%E7%9A%84%E5%88%86%E6%94%AF%E5%B9%B6%E5%88%87%E6%8D%A2%E5%88%B0%E8%BF%99%E4%B8%AA%E5%88%86%E6%94%AF"><span class="nav-text">4.创建一个hexo（任意名字）的分支并切换到这个分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E7%BB%93%E6%9D%9F"><span class="nav-text">5. 结束</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E6%9B%B4%E6%96%B0%E5%8D%9A%E5%AE%A2"><span class="nav-text">6.更新博客</span></a></li></ol></li></ol></li></ol>
     </div>
 </div>
         </aside>
